@@ -1,0 +1,28 @@
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+
+import javax.swing.ImageIcon;
+
+
+public class Obstacle extends Point  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1499561294971730477L;
+	ImageIcon imageIcon = new ImageIcon("resources\\obstacle.png");
+	Image image;
+	Obstacle(int x, int y)
+	{
+		super(x,y);
+		image = imageIcon.getImage();
+		
+	}
+
+	public void draw(Graphics g) {
+		g.drawImage(image, x*40, y*40, 40, 40, null);
+		return;
+		
+	}
+
+}

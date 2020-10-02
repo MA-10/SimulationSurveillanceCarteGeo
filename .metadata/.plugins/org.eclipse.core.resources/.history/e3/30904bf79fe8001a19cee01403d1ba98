@@ -1,0 +1,127 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.border.EmptyBorder;
+
+import java.awt.Button;
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Window.Type;
+import java.awt.Frame;
+import javax.swing.JButton;
+import javax.swing.UIManager;
+import javax.swing.JTextField;
+import java.awt.SystemColor;
+import javax.swing.JPanel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+
+public class window  {
+
+	private JFrame frmTheThief;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					window window = new window();
+					window.frmTheThief.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public window() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmTheThief = new JFrame();
+		frmTheThief.getContentPane().setBackground(SystemColor.info);
+		frmTheThief.setUndecorated(true);
+		frmTheThief.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		frmTheThief.setForeground(Color.WHITE);
+		frmTheThief.setTitle("The Thief");
+		frmTheThief.setBounds(100, 100, 608, 536);
+		frmTheThief.setLocation(600, 250);
+		frmTheThief.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmTheThief.getContentPane().setLayout(null);
+		
+		JButton btnPlayButton = new JButton("Play");
+		btnPlayButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ConfigurationView ConfigurationView = new ConfigurationView();
+				ConfigurationView.main(null);
+				frmTheThief.dispose();
+				
+				
+			}
+		});
+		btnPlayButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		
+		btnPlayButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnPlayButton.setBorder(UIManager.getBorder("Button.border"));
+		btnPlayButton.setBounds(219, 60, 231, 63);
+		frmTheThief.getContentPane().add(btnPlayButton);
+		
+		JButton btnScoreButton = new JButton("Score");
+		btnScoreButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Score score = new Score();
+				JOptionPane.showMessageDialog(null, "Best score is : " + score.highScore + "  by : " + score.Name );
+			}
+		});
+		btnScoreButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnScoreButton.setBorder(UIManager.getBorder("Button.border"));
+		btnScoreButton.setBounds(219, 172, 231, 63);
+		frmTheThief.getContentPane().add(btnScoreButton);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnExit.setBorder(UIManager.getBorder("Button.border"));
+		btnExit.setBounds(219, 399, 231, 63);
+		frmTheThief.getContentPane().add(btnExit);
+		
+		JButton btnAboutUsButton = new JButton("About us");
+		btnAboutUsButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnAboutUsButton.setBorder(UIManager.getBorder("Button.border"));
+		btnAboutUsButton.setBounds(219, 288, 231, 63);
+		frmTheThief.getContentPane().add(btnAboutUsButton);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\Iserv\\Desktop\\Projet\\Jeu\\src\\robbery.jpg"));
+		lblNewLabel.setBounds(0, 0, 608, 536);
+		frmTheThief.getContentPane().add(lblNewLabel);
+	}
+}

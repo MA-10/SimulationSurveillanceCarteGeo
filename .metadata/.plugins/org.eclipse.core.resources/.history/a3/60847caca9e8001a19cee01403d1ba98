@@ -1,0 +1,183 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+public class GrilleView extends JFrame {
+
+	private JPanel contentPane;
+	ConfigurationModel configuration ;
+	String Emplacement;
+	
+	
+
+	/**
+	 * Create the frame.
+	 */
+	
+
+public GrilleView(ConfigurationModel configuration,String Emplacement) {
+		
+		this.configuration=configuration;
+		this.Emplacement=Emplacement;
+		JFrame frame = new JFrame("Grille");
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.getContentPane().setLayout(new BorderLayout());
+		frame.getContentPane().add(new TestPane(),BorderLayout.WEST);
+		frame.getContentPane().add(new JPanel(),BorderLayout.EAST);
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+	
+	
+
+	public  class TestPane extends JPanel {
+	public int xOffset =0;
+	public int yOffset =0;
+
+
+	private int columnCount = 0;
+	private int rowCount = 0;
+	private List<Rectangle> cells;
+	private Point selectedCell;
+	public TestPane() {
+		columnCount=configuration.nbre_ligne;
+		rowCount=configuration.nbre_colonne;
+	cells = new ArrayList<>(columnCount * rowCount);
+	MouseAdapter mouseHandler;
+	mouseHandler = new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+				Point point = e.getPoint();
+				int width = getWidth();
+				int height = getHeight();
+				int cellWidth = width / columnCount;
+				int cellHeight = height / rowCount;
+				selectedCell = null;
+				if (e.getX() >= xOffset && e.getY() >= yOffset) {
+						int column = (e.getX() - xOffset) / cellWidth;
+						int row = (e.getY() - yOffset) / cellHeight;
+						if (column >= 0 && row >= 0 && column < columnCount && row < rowCount) {
+							selectedCell = new Point(column, row);
+							Point p = new Point(row+1,column+1);
+							boolean contains = (configuration.Emplac_Obstacle.contains(p) || configuration.Emplac_Sac.contains(p) 
+									|| configuration.Emplac_Sortie.contains(p) || configuration.Emplac_Robots.contains(p) 
+									|| configuration.Emplac_Intrus.contains(p));
+							if(contains)
+							{
+								JOptionPane.showMessageDialog(null, "L'emplacement choisi existe déja ! ");
+							}else
+							{
+								switch (Emplacement)
+								{
+								case "Obstacle":
+									configuration.Emplac_Obstacle.add(p);break;
+								case "Sac":
+									configuration.Emplac_Sac.add(p);break;
+								case "Sortie":
+									if (p.x ==1 || p.x == configuration.nbre_colonne || p.y == 1 || p.y == configuration.nbre_ligne)
+									{
+										configuration.Emplac_Sortie.add(p);break;
+									}
+									JOptionPane.showMessageDialog(null, "Une sortie doit être au bord de la grille  !");break;									
+								case "Robots":
+									if (configuration.Emplac_Robots.size() <=4)
+									{
+										configuration.Emplac_Robots.add(p);break;
+									}else JOptionPane.showMessageDialog(null, "Le nombre de robots ne dépasse pas 4 !");break;
+									
+								case "Intrus":
+									if (configuration.Emplac_Intrus.size() <=4)
+									{
+										configuration.Emplac_Intrus.add(p);break;
+									}else JOptionPane.showMessageDialog(null, "Le nombre d'intrus ne dépasse pas 4 !");break;
+								default: break;
+									
+								}
+							}
+	
+	System.out.println(p);
+							}
+					}
+				repaint();
+			}
+		};
+			addMouseListener(mouseHandler);
+	}
+	public void mouseExited(MouseEvent e) {
+		selectedCell = null;
+		}
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(columnCount*50, rowCount*50);
+		}
+	@Override
+	public void invalidate() {
+		cells.clear();
+		selectedCell = null;
+		super.invalidate();
+		}
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D) g.create();
+		int width = getWidth();
+		int height = getHeight();
+		int cellWidth = width / columnCount;
+		int cellHeight = height / rowCount;
+		int xOffset = (width - (columnCount * cellWidth)) / 2;
+		int yOffset = (height - (rowCount * cellHeight)) / 2;
+		if (cells.isEmpty()) {
+			for (int row = 0; row < rowCount; row++) {
+				for (int col = 0; col < columnCount; col++) {
+					Rectangle cell = new Rectangle(
+					xOffset + (col * cellWidth),
+					yOffset + (row * cellHeight),
+					cellWidth,
+					cellHeight);
+					cells.add(cell);
+					}
+				}
+			}
+		/*if (selectedCell != null) {
+			int index = selectedCell.x + (selectedCell.y * columnCount);
+			Rectangle cell = cells.get(index);
+			g2d.setColor(Color.BLUE);
+			g2d.fill(cell);
+		}*/
+		
+		for (int i=0; i <configuration.Emplac_Obstacle.size();i++)
+		{
+			Point  p= configuration.Emplac_Obstacle.get(i);
+			int index = (p.y-1) + ((p.x-1) * columnCount);
+			Rectangle cell = cells.get(index);
+			g2d.setColor(Color.black);
+			g2d.fill(cell);
+		}
+		g2d.setColor(Color.GRAY);
+		for (Rectangle cell : cells) {
+			g2d.draw(cell);
+			}
+		g2d.dispose();
+		}
+	}
+}

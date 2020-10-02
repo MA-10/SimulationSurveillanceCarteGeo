@@ -1,0 +1,29 @@
+import java.util.*;
+public class ConfigurationModel {
+	public int  nbre_ligne;
+	public int nbre_colonne;
+	public Vector <Pair> Emplac_Sac ;
+	public Vector <Pair> Emplac_Obstacle ;
+	public Vector <Pair> Emplac_Sortie ;
+	ConfigurationModel (int l , int c)
+	{
+		this.nbre_ligne =l;
+		this.nbre_colonne=c;
+		Emplac_Sac= new Vector <Pair>();
+		Emplac_Obstacle= new Vector <Pair>();
+		Emplac_Sortie= new Vector <Pair>();
+	}
+	public void Add_Emplac_Sac (Pair p)
+	{
+		Emplac_Sac.add(p);
+	}
+	public void Add_Emplac_Obstacle(Pair p)
+	{
+		Emplac_Obstacle.add(p);
+	}
+	
+	
+	
+	
+
+}

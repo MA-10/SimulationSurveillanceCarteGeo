@@ -1,0 +1,430 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.FlowLayout;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.Point;
+
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Vector;
+import javax.swing.ImageIcon;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import javax.swing.border.TitledBorder;
+
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.SwingConstants;
+import java.awt.SystemColor;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.BevelBorder;
+import java.awt.Toolkit;
+
+public class ConfigurationView {
+
+	private JFrame frmConfiguration;
+	private JTextField nbre_ligne_Field;
+	private  JTextField nbre_colonne_Field;
+	private JTextField nom1;
+	private JTextField nom2;
+	public ConfigurationModel configuration = new ConfigurationModel();
+	GridLayoutManager gridLayoutManager;
+	private boolean grilleCreated = false ; 
+	
+	public static boolean tryParseInt(String value) {  
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	      }  
+	}
+	
+
+	/**
+	 * Create the application.
+	 */
+	public ConfigurationView() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmConfiguration = new JFrame();
+		frmConfiguration.setIconImage(Toolkit.getDefaultToolkit().getImage("resources\\SettingsIcon.png"));
+		frmConfiguration.setTitle("Configuration");
+		frmConfiguration.setBounds(500, 250, 750, 600);
+		frmConfiguration.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmConfiguration.getContentPane().setLayout(null);
+		frmConfiguration.setResizable(false);
+		frmConfiguration.setUndecorated(true);
+		frmConfiguration.setVisible(true);
+		
+		JPanel LigneColonnePanel = new JPanel();
+		LigneColonnePanel.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(191, 205, 219), SystemColor.activeCaption, null, null));
+		LigneColonnePanel.setBackground(Color.DARK_GRAY);
+		LigneColonnePanel.setBounds(202, 36, 332, 111);
+		frmConfiguration.getContentPane().add(LigneColonnePanel);
+		LigneColonnePanel.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Nombre de ligne : ");
+		lblNewLabel.setBounds(10, 11, 199, 37);
+		LigneColonnePanel.add(lblNewLabel);
+		lblNewLabel.setBackground(SystemColor.info);
+		lblNewLabel.setForeground(Color.LIGHT_GRAY);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		
+		JLabel lblNombreDeColonne = new JLabel("Nombre de colonne : ");
+		lblNombreDeColonne.setForeground(Color.LIGHT_GRAY);
+		lblNombreDeColonne.setBounds(10, 63, 199, 37);
+		LigneColonnePanel.add(lblNombreDeColonne);
+		lblNombreDeColonne.setBackground(SystemColor.inactiveCaption);
+		lblNombreDeColonne.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		
+		nbre_ligne_Field = new JTextField();
+		nbre_ligne_Field.setForeground(Color.LIGHT_GRAY);
+		nbre_ligne_Field.setBounds(209, 11, 96, 37);
+		LigneColonnePanel.add(nbre_ligne_Field);
+		nbre_ligne_Field.setBackground(Color.GRAY);
+		nbre_ligne_Field.setHorizontalAlignment(SwingConstants.CENTER);
+		nbre_ligne_Field.setText("15");
+		nbre_ligne_Field.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(nbre_ligne_Field.getText().isEmpty() == false )
+				{ int n=0; 
+					if (tryParseInt(nbre_ligne_Field.getText())  ) {
+						n=Integer.parseInt(nbre_ligne_Field.getText());
+					}else JOptionPane.showMessageDialog(null, "Entrer un entier !");
+					if(n != 0)
+					{
+						configuration.nbre_ligne=n;
+						
+					}else JOptionPane.showMessageDialog(null, "le nombre de ligne  ne doit pas etre 0");
+				}else JOptionPane.showMessageDialog(null, "Saisir le nombre de ligne ");
+			}
+		});
+		nbre_ligne_Field.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nbre_ligne_Field.setColumns(3);
+		
+		
+		
+		nbre_colonne_Field = new JTextField();
+		nbre_colonne_Field.setForeground(Color.LIGHT_GRAY);
+		nbre_colonne_Field.setBounds(209, 63, 96, 37);
+		LigneColonnePanel.add(nbre_colonne_Field);
+		nbre_colonne_Field.setBackground(Color.GRAY);
+		nbre_colonne_Field.setHorizontalAlignment(SwingConstants.CENTER);
+		nbre_colonne_Field.setText("30");
+		nbre_colonne_Field.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(nbre_colonne_Field.getText().isEmpty() == false )
+				{ int n=0; 
+					if (tryParseInt(nbre_colonne_Field.getText())  ) {
+						n=Integer.parseInt(nbre_colonne_Field.getText());
+					}else JOptionPane.showMessageDialog(null, "Entrer un entier !");
+					if(n != 0)
+					{
+						configuration.nbre_colonne=n;
+					}else JOptionPane.showMessageDialog(null, "le nombre de colonne  ne doit pas etre 0 !");
+				}else JOptionPane.showMessageDialog(null, "Saisir le nombre de colonne ! ");
+			}
+		});
+		nbre_colonne_Field.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nbre_colonne_Field.setColumns(3);
+		
+		JButton btnObstacleButton = new JButton("Obstacle");
+		btnObstacleButton.setForeground(Color.LIGHT_GRAY);
+		btnObstacleButton.setBackground(Color.DARK_GRAY);
+		btnObstacleButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				if (grilleCreated == false) {
+					gridLayoutManager=new GridLayoutManager(configuration);
+					grilleCreated = true;
+				}
+				gridLayoutManager.SetEmplacement("Obstacle");
+				gridLayoutManager.setVisible(true);
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnObstacleButton.setBackground(SystemColor.gray);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnObstacleButton.setBackground(SystemColor.DARK_GRAY);
+			}
+		});
+		btnObstacleButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnObstacleButton.setBounds(83, 181, 127, 50);
+		frmConfiguration.getContentPane().add(btnObstacleButton);
+		
+		JButton btnSacButton = new JButton("Sac");
+		btnSacButton.setForeground(Color.LIGHT_GRAY);
+		btnSacButton.setBackground(Color.DARK_GRAY);
+		btnSacButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				if (grilleCreated == false) {
+					gridLayoutManager=new GridLayoutManager(configuration);
+					grilleCreated = true;
+				}
+				gridLayoutManager.SetEmplacement("Sac");
+				gridLayoutManager.setVisible(true);
+				
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnSacButton.setBackground(SystemColor.gray);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnSacButton.setBackground(SystemColor.darkGray);
+			}
+		});
+		btnSacButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnSacButton.setBounds(298, 181, 127, 50);
+		frmConfiguration.getContentPane().add(btnSacButton);
+		
+		JButton btnSortieButton = new JButton("Sortie");
+		btnSortieButton.setForeground(Color.LIGHT_GRAY);
+		btnSortieButton.setBackground(Color.DARK_GRAY);
+		btnSortieButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				if (grilleCreated == false) {
+					gridLayoutManager=new GridLayoutManager(configuration);
+					grilleCreated = true;
+				}
+				gridLayoutManager.SetEmplacement("Sortie");
+				gridLayoutManager.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnSortieButton.setBackground(SystemColor.gray);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnSortieButton.setBackground(SystemColor.darkGray);
+			}
+		});
+		btnSortieButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnSortieButton.setBounds(523, 181, 127, 50);
+		frmConfiguration.getContentPane().add(btnSortieButton);
+		
+		JPanel Joueur1Panel = new JPanel();
+		Joueur1Panel.setBackground(Color.DARK_GRAY);
+		Joueur1Panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		Joueur1Panel.setBounds(40, 271, 274, 160);
+		frmConfiguration.getContentPane().add(Joueur1Panel);
+		Joueur1Panel.setLayout(null);
+		
+		JButton btnRobotButton = new JButton("G\u00E9rer les emplacements des robots");
+		btnRobotButton.setBackground(Color.GRAY);
+		btnRobotButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				if (grilleCreated == false) {
+					gridLayoutManager=new GridLayoutManager(configuration);
+					grilleCreated = true;
+				}
+				gridLayoutManager.SetEmplacement("Robots");
+				gridLayoutManager.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnRobotButton.setBackground(SystemColor.lightGray);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnRobotButton.setBackground(SystemColor.gray);
+			}
+		});
+		btnRobotButton.setBounds(10, 83, 250, 37);
+		Joueur1Panel.add(btnRobotButton);
+		btnRobotButton.setFont(new Font("Tahoma", Font.BOLD, 11));
+		
+		JLabel lblNewLabel_4 = new JLabel(configuration.Nom_joueur1);
+		lblNewLabel_4.setForeground(Color.LIGHT_GRAY);
+		lblNewLabel_4.setBounds(84, 22, 146, 18);
+		Joueur1Panel.add(lblNewLabel_4);
+		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		nom1 = new JTextField();
+		nom1.setText("joueur 1");
+		nom1.setBackground(Color.LIGHT_GRAY);
+		nom1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				configuration.Nom_joueur1 = nom1.getText();
+			}
+			
+		});
+		nom1.setBounds(10, 47, 250, 25);
+		Joueur1Panel.add(nom1);
+		nom1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		nom1.setColumns(10);
+		
+		
+		JPanel Joueur2Panel = new JPanel();
+		Joueur2Panel.setBackground(Color.DARK_GRAY);
+		Joueur2Panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Joueur 2 :", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		Joueur2Panel.setBounds(421, 271, 274, 160);
+		frmConfiguration.getContentPane().add(Joueur2Panel);
+		Joueur2Panel.setLayout(null);
+		
+		JButton btnIntruButton = new JButton("G\u00E9rer les emplacements des intrus");
+		btnIntruButton.setBackground(Color.GRAY);
+		btnIntruButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				if (grilleCreated == false) {
+					gridLayoutManager=new GridLayoutManager(configuration);
+					grilleCreated = true;
+				}
+				gridLayoutManager.SetEmplacement("Intrus");
+				gridLayoutManager.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnIntruButton.setBackground(SystemColor.lightGray);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnIntruButton.setBackground(SystemColor.gray);
+
+			}
+		});
+		btnIntruButton.setBounds(16, 81, 246, 37);
+		Joueur2Panel.add(btnIntruButton);
+		btnIntruButton.setFont(new Font("Tahoma", Font.BOLD, 11));
+		
+		JLabel label = new JLabel(configuration.Nom_joueur2);
+		label.setForeground(Color.LIGHT_GRAY);
+		label.setBounds(84, 19, 146, 18);
+		Joueur2Panel.add(label);
+		label.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		nom2 = new JTextField();
+		nom2.setBackground(Color.LIGHT_GRAY);
+		nom2.setText("joueur 2");
+		nom2.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				configuration.Nom_joueur2=nom2.getText();
+			}
+		});
+		nom2.setBounds(16, 48, 246, 25);
+		Joueur2Panel.add(nom2);
+		nom2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		nom2.setColumns(10);
+		
+		JButton btnStartButton = new JButton("Commencer le jeu ");
+		btnStartButton.setForeground(Color.LIGHT_GRAY);
+		btnStartButton.setBackground(Color.DARK_GRAY);
+		btnStartButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				
+				if(configuration.Emplac_Intrus.size() !=0  && configuration.Emplac_Robots.size() != 0  &&
+						configuration.Emplac_Sac.size() != 0 && configuration.Emplac_Sortie.size() != 0 &&
+						!configuration.Nom_joueur1.isEmpty() && !configuration.Nom_joueur2.isEmpty())
+				{
+					frmConfiguration.dispose();
+					gridLayoutManager.dispose();
+					Jeu startJeu = new Jeu(configuration);				
+					
+				}
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnStartButton.setBackground(SystemColor.gray);
+				
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnStartButton.setBackground(SystemColor.darkGray);
+			}
+		});
+		btnStartButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnStartButton.setBounds(287, 481, 199, 31);
+		frmConfiguration.getContentPane().add(btnStartButton);
+		
+		JButton btnQuitter = new JButton("Quitter");
+		btnQuitter.setForeground(Color.LIGHT_GRAY);
+		btnQuitter.setBackground(Color.DARK_GRAY);
+		btnQuitter.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				frmConfiguration.dispose();
+				if (grilleCreated) {
+					gridLayoutManager.dispose();
+				}
+				Menu window = new Menu();
+				window.main(null);
+				}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnQuitter.setBackground(SystemColor.gray);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnQuitter.setBackground(SystemColor.darkGray);
+			}
+		});
+		
+		btnQuitter.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnQuitter.setBounds(287, 523, 199, 31);
+		frmConfiguration.getContentPane().add(btnQuitter);
+		
+		JLabel Background = new JLabel("New label");
+		Background.setForeground(Color.WHITE);
+		Background.setIcon(new ImageIcon("resources\\SettingsBackground.png"));
+		Background.setBounds(0, 0, 744, 601);
+		frmConfiguration.getContentPane().add(Background);
+		
+		
+		
+		
+		
+		
+	}
+}

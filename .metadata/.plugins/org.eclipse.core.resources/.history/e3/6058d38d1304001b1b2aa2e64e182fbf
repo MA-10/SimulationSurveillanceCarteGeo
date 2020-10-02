@@ -1,0 +1,282 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+
+import java.awt.Button;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.GridLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.Color;
+import java.awt.Font; 
+import java.awt.Window.Type;
+import java.awt.Frame;
+import java.awt.Graphics;
+
+import javax.swing.JButton;
+import javax.swing.UIManager;
+import javax.swing.JTextField;
+import java.awt.SystemColor;
+import java.awt.TextArea;
+import java.awt.Toolkit;
+
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+
+import javax.swing.JLabel;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+
+public class Menu  {
+
+	private JFrame frmTheThief;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Menu window = new Menu();
+					window.frmTheThief.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	
+
+	/**
+	 * Create the application.
+	 */
+	public Menu() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmTheThief = new JFrame();
+		frmTheThief.getContentPane().setBackground(SystemColor.info);
+		frmTheThief.setUndecorated(true);
+		frmTheThief.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		frmTheThief.setForeground(Color.WHITE);
+		frmTheThief.setTitle("The Thief");
+		frmTheThief.setBounds(100, 100, 500, 450);
+		frmTheThief.setLocationRelativeTo(null);
+		frmTheThief.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmTheThief.getContentPane().setLayout(null);
+		
+		JButton btnPlayButton = new JButton("Play");
+		btnPlayButton.setBackground(Color.LIGHT_GRAY);
+		btnPlayButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ConfigurationView ConfigurationView = new ConfigurationView();
+				
+				frmTheThief.dispose();
+				
+				
+			}
+		});
+	
+		
+		btnPlayButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnPlayButton.setBorder(UIManager.getBorder("Button.border"));
+		btnPlayButton.setBounds(30, 32, 231, 38);
+		frmTheThief.getContentPane().add(btnPlayButton);	
+		JButton btnScoreButton = new JButton("Historique");
+		btnScoreButton.setBackground(Color.LIGHT_GRAY);
+		btnScoreButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Historique historique = new Historique();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
+			}
+		});
+		
+		btnScoreButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnScoreButton.setBorder(UIManager.getBorder("Button.border"));
+		btnScoreButton.setBounds(30, 94, 231, 38);
+		frmTheThief.getContentPane().add(btnScoreButton);
+		
+		JButton btnExit = new JButton("Exit");
+		btnExit.setBackground(Color.LIGHT_GRAY);
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)  {
+				exit();
+			}
+		});
+		
+		
+		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnExit.setBorder(UIManager.getBorder("Button.border"));
+		btnExit.setBounds(30, 222, 231, 38);
+		frmTheThief.getContentPane().add(btnExit);
+		
+		JButton btnAboutUsButton = new JButton("About us");
+		btnAboutUsButton.setBackground(Color.LIGHT_GRAY);
+		btnAboutUsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame frame = new JFrame("About us");
+				frame.setSize(800, 600);
+				frame.setLocationRelativeTo(null);
+				frame.setResizable(false);
+				JLabel lblNewLabel2 = new JLabel("New label");
+				lblNewLabel2.setIcon(new ImageIcon(getClass().getResource("AboutUs.png")));
+				lblNewLabel2.setBounds(0, -19, 800, 600);
+				frame.getContentPane().add(lblNewLabel2);
+				
+				frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				frame.setLocationRelativeTo(null);
+				frame.setVisible(true);
+			}
+		});
+		btnAboutUsButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnAboutUsButton.setBorder(UIManager.getBorder("Button.border"));
+		btnAboutUsButton.setBounds(30, 159, 231, 38);
+		frmTheThief.getContentPane().add(btnAboutUsButton);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon(getClass().getResource("MenuBackground.png")));
+		lblNewLabel.setBounds(0, -19, 500, 529);
+		frmTheThief.getContentPane().add(lblNewLabel);
+	}
+	//vérifier avant de quitter
+	void exit() {
+		int a= JOptionPane.showConfirmDialog(null, "Clicker sur \"oui \" pour quitter", "Quit options", JOptionPane.YES_NO_OPTION);
+		if (a==JOptionPane.YES_OPTION) {
+			frmTheThief.dispose();
+		}
+	}
+	public class Historique extends JFrame{
+		Historique() throws IOException
+		{
+			super("Historique");
+		      setSize(550, 300);
+		      setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("HistoriqueIcon.png")));
+		      
+		      setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		      getContentPane().add(new HistoriquePanel());
+		      setLocationRelativeTo(null);
+		      setUndecorated(true);
+		      setVisible(true);
+		}
+		private  class HistoriquePanel extends JPanel {
+			
+			   public HistoriquePanel() throws IOException {
+				    String[] columnNames = {"Partie n°","Temps", "Joueur 1", "Intrus attrapés","Joueur 2", "Sacs volés"};
+				    Object[][] data=new Object [3][6];
+				   
+				   URL path=getClass().getResource("score.txt");
+				   
+			       BufferedReader reader = null;
+			      
+			    
+					reader = new BufferedReader(new FileReader(path.toString()));
+					data=new Object [(int) reader.lines().count()][7];
+					reader = new BufferedReader(new FileReader(path.toString()));
+				
+					
+			       String line = null;
+				
+					line = reader.readLine();	
+				
+			       int n=0;
+			       while (line != null)                 // read the score file line by line
+			       {
+			    	   n++;
+			           	String[] Fields = line.split(",");
+			           	data[n-1][0]=n;
+			           	for (int i=0; i<Fields.length;i++)
+			           	{
+			           		
+			           		data[n-1][i+1]=Fields[i];
+			           	}
+						line = reader.readLine();
+					
+			       }
+			      
+					reader.close();
+				
+			      
+			       TableModel model = new DefaultTableModel(data, columnNames) {
+			 	      
+			 	   };
+			       JTable table = new JTable(model);
+				   JScrollPane scrollPane = new JScrollPane(table);
+			      JLabel lblNewLabel = new JLabel();
+			      lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+			      lblNewLabel.setForeground(Color.LIGHT_GRAY);
+			      lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
+			      
+			      JButton btnQuitter = new JButton("Quitter");
+			      btnQuitter.addMouseListener(new MouseAdapter() {
+			      	@Override
+			      	public void mouseClicked(MouseEvent e) {
+			      		dispose();
+			      	}
+			      });
+			      btnQuitter.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			      btnQuitter.setBackground(SystemColor.activeCaption);
+			     
+			      GroupLayout groupLayout = new GroupLayout(this);
+			      groupLayout.setHorizontalGroup(
+			      	groupLayout.createParallelGroup(Alignment.LEADING)
+			      		.addGroup(groupLayout.createSequentialGroup()
+			      			.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+			      				.addGroup(groupLayout.createSequentialGroup()
+			      					.addGap(215)
+			      					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+			      				.addGroup(groupLayout.createSequentialGroup()
+			      					.addContainerGap()
+			      					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE))
+			      				.addGroup(groupLayout.createSequentialGroup()
+			      					.addGap(232)
+			      					.addComponent(btnQuitter, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)))
+			      			.addContainerGap())
+			      );
+			      groupLayout.setVerticalGroup(
+			      	groupLayout.createParallelGroup(Alignment.LEADING)
+			      		.addGroup(groupLayout.createSequentialGroup()
+			      			.addGap(26)
+			      			.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+			      			.addGap(18)
+			      			.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+			      			.addGap(18)
+			      			.addComponent(btnQuitter, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+			      			.addContainerGap(57, Short.MAX_VALUE))
+			      );
+			      setLayout(groupLayout);
+			   }
+			   protected void paintComponent(Graphics g) {
+				   super.paintComponent(g);
+				   ImageIcon imageIcon = new ImageIcon(getClass().getResource("HistoriqueBackground.png"));
+			       g.drawImage(imageIcon.getImage(), 0, 0, this);
+			   }
+			}
+		}
+
+}

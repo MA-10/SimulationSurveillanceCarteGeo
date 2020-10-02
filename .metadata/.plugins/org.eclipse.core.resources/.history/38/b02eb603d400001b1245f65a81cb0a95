@@ -1,0 +1,115 @@
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import javax.swing.*;
+import javax.swing.table.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+public class Historique extends JFrame{
+	Historique() throws IOException
+	{
+		super("Historique");
+	      setSize(550, 300);
+	      setIconImage(Toolkit.getDefaultToolkit().getImage("resources\\HistoriqueIcon.png"));
+	      
+	      setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	      getContentPane().add(new HistoriquePanel());
+	      setLocationRelativeTo(null);
+	      setUndecorated(true);
+	      setVisible(true);
+	}
+	public  class HistoriquePanel extends JPanel {
+		
+		   public HistoriquePanel() throws IOException {
+			    String[] columnNames = {"Partie n°","Temps", "Joueur 1", "Intrus attrapés","Joueur 2", "Sacs volés"};
+			    Object[][] data=new Object [3][6];
+			   
+			   String path="resources\\score.txt";
+			   
+		       BufferedReader reader = null;
+		      
+		    
+				reader = new BufferedReader(new FileReader(path));
+				data=new Object [(int) reader.lines().count()][7];
+				reader = new BufferedReader(new FileReader(path));
+			
+				
+		       String line = null;
+			
+				line = reader.readLine();	
+			
+		       int n=0;
+		       System.out.println(line);
+		       while (line != null)                 // read the score file line by line
+		       {
+		    	   n++;
+		           	String[] Fields = line.split(",");
+		           	data[n-1][0]=n;
+		           	for (int i=0; i<Fields.length;i++)
+		           	{
+		           		
+		           		data[n-1][i+1]=Fields[i];
+		           	}
+					line = reader.readLine();
+				
+		       }
+		      
+				reader.close();
+			
+		      
+		       TableModel model = new DefaultTableModel(data, columnNames) {
+		 	      
+		 	   };
+		       JTable table = new JTable(model);
+			   JScrollPane scrollPane = new JScrollPane(table);     
+		      JButton btnQuitter = new JButton("Quitter");
+		      btnQuitter.addMouseListener(new MouseAdapter() {
+		      	@Override
+		      	public void mouseClicked(MouseEvent e) {
+		      		dispose();
+		      	}
+		      });
+		      btnQuitter.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		      btnQuitter.setBackground(SystemColor.activeCaption);
+		     
+		      GroupLayout groupLayout = new GroupLayout(this);
+		      groupLayout.setHorizontalGroup(
+		      	groupLayout.createParallelGroup(Alignment.LEADING)
+		      		.addGroup(groupLayout.createSequentialGroup()
+		      			.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+		      				.addGroup(groupLayout.createSequentialGroup()
+		      					.addGap(215)
+		      					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+		      				.addGroup(groupLayout.createSequentialGroup()
+		      					.addContainerGap()
+		      					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE))
+		      				.addGroup(groupLayout.createSequentialGroup()
+		      					.addGap(232)
+		      					.addComponent(btnQuitter, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)))
+		      			.addContainerGap())
+		      );
+		      groupLayout.setVerticalGroup(
+		      	groupLayout.createParallelGroup(Alignment.LEADING)
+		      		.addGroup(groupLayout.createSequentialGroup()
+		      			.addGap(26)
+		      			.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+		      			.addGap(18)
+		      			.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+		      			.addGap(18)
+		      			.addComponent(btnQuitter, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+		      			.addContainerGap(57, Short.MAX_VALUE))
+		      );
+		      setLayout(groupLayout);
+		   }
+		   protected void paintComponent(Graphics g) {
+			   super.paintComponent(g);
+			   ImageIcon imageIcon = new ImageIcon("resources\\HistoriqueBackground.png");
+		       g.drawImage(imageIcon.getImage(), 0, 0, this);
+		   }
+		}
+	}

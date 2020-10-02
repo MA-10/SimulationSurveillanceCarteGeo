@@ -1,0 +1,210 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.FlowLayout;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.awt.Point;
+
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class ConfigurationView extends Thread {
+
+	private JFrame frmConfiguration;
+	private JTextField nbre_ligne_Field;
+	private JTextField nbre_colonne_Field;
+	public ConfigurationModel configuration;
+	private JTextField textField;
+	private JTextField textField_1;
+
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ConfigurationView window = new ConfigurationView();
+					window.frmConfiguration.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public ConfigurationView() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmConfiguration = new JFrame();
+		frmConfiguration.setTitle("Configuration");
+		frmConfiguration.setBounds(100, 100, 755, 780);
+		frmConfiguration.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmConfiguration.getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Nombre de ligne : ");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setBounds(162, 49, 199, 37);
+		frmConfiguration.getContentPane().add(lblNewLabel);
+		
+		JLabel lblNombreDeColonne = new JLabel("Nombre de colonne : ");
+		lblNombreDeColonne.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNombreDeColonne.setBounds(162, 97, 199, 37);
+		frmConfiguration.getContentPane().add(lblNombreDeColonne);
+		
+		nbre_ligne_Field = new JTextField();
+		nbre_ligne_Field.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nbre_ligne_Field.setBounds(371, 49, 96, 37);
+		frmConfiguration.getContentPane().add(nbre_ligne_Field);
+		nbre_ligne_Field.setColumns(3);
+		
+		
+		
+		nbre_colonne_Field = new JTextField();
+		nbre_colonne_Field.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nbre_colonne_Field.setColumns(3);
+		nbre_colonne_Field.setBounds(371, 97, 96, 37);
+		frmConfiguration.getContentPane().add(nbre_colonne_Field);
+		
+		JButton btnNewButton = new JButton("Ajouter un obstacle");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				GrilleView grille = new GrilleView(configuration.nbre_ligne,configuration.nbre_colonne,configuration);
+				grille.setVisible(true);
+				
+			}
+		});
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnNewButton.setBounds(162, 209, 439, 50);
+		frmConfiguration.getContentPane().add(btnNewButton);
+		
+		JButton btnChoisirLesEmplacements = new JButton("Ajouter un sacs");
+		btnChoisirLesEmplacements.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnChoisirLesEmplacements.setBounds(162, 270, 439, 50);
+		frmConfiguration.getContentPane().add(btnChoisirLesEmplacements);
+		
+		JButton btnChoisirLesEmplacements_1 = new JButton("Ajouter une sortie");
+		btnChoisirLesEmplacements_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnChoisirLesEmplacements_1.setBounds(162, 331, 439, 50);
+		frmConfiguration.getContentPane().add(btnChoisirLesEmplacements_1);
+		
+		JButton btnNewButton_1 = new JButton("Cr\u00E9er");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnNewButton_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(nbre_ligne_Field.getText().length() !=0 && nbre_colonne_Field.getText().length() != 0)
+				{
+					
+					int n=Integer.parseInt(nbre_ligne_Field.getText());
+					int m = Integer.parseInt(nbre_colonne_Field.getText());
+					if(n != 0 && m !=0)
+					{
+						configuration = new ConfigurationModel(n,m);
+						JOptionPane.showMessageDialog(null, "Votre grille a été crée");
+					}else JOptionPane.showMessageDialog(null, "le nombre de ligne et le nombre de colonne ne doivent pas etre 0");
+				}else JOptionPane.showMessageDialog(null, "Saisir le nombre de ligne et le nombre de colonne");
+				
+			}
+		});
+		
+		btnNewButton_1.setBounds(371, 145, 95, 37);
+		frmConfiguration.getContentPane().add(btnNewButton_1);
+		
+		JLabel lblNewLabel_1 = new JLabel("Joueur 1 :");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblNewLabel_1.setBounds(83, 429, 102, 14);
+		frmConfiguration.getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Nombre des robots : ");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_2.setBounds(83, 464, 146, 14);
+		frmConfiguration.getContentPane().add(lblNewLabel_2);
+		
+		textField = new JTextField();
+		textField.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		textField.setBounds(239, 459, 50, 25);
+		frmConfiguration.getContentPane().add(textField);
+		textField.setColumns(10);
+		
+		JButton btnNewButton_2 = new JButton("G\u00E9rer les emplacements des robots");
+		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnNewButton_2.setBounds(83, 497, 233, 37);
+		frmConfiguration.getContentPane().add(btnNewButton_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("Joueur 2 :");
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblNewLabel_3.setBounds(446, 431, 96, 14);
+		frmConfiguration.getContentPane().add(lblNewLabel_3);
+		
+		JLabel lblNombreDesIntrus = new JLabel("Nombre des intrus : ");
+		lblNombreDesIntrus.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNombreDesIntrus.setBounds(446, 466, 146, 14);
+		frmConfiguration.getContentPane().add(lblNombreDesIntrus);
+		
+		textField_1 = new JTextField();
+		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		textField_1.setColumns(10);
+		textField_1.setBounds(596, 463, 50, 25);
+		frmConfiguration.getContentPane().add(textField_1);
+		
+		JButton btnGrerLesEmplacements = new JButton("G\u00E9rer les emplacements des intrus");
+		btnGrerLesEmplacements.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnGrerLesEmplacements.setBounds(446, 497, 233, 37);
+		frmConfiguration.getContentPane().add(btnGrerLesEmplacements);
+		
+		JButton btnNewButton_3 = new JButton("Commencer le jeu ");
+		btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnNewButton_3.setBounds(287, 599, 199, 31);
+		frmConfiguration.getContentPane().add(btnNewButton_3);
+		
+		JButton btnQuitter = new JButton("Quitter");
+		btnQuitter.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.exit(0);
+			}
+		});
+		btnQuitter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnQuitter.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnQuitter.setBounds(287, 654, 199, 31);
+		frmConfiguration.getContentPane().add(btnQuitter);
+		
+		
+		
+		
+	}
+}

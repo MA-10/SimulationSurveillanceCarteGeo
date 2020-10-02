@@ -1,0 +1,82 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Color;
+import javax.swing.ImageIcon;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.Font;
+
+public class Grille extends JFrame {
+
+	public Grille() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 583, 413);
+		getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel = new JPanel();
+		getContentPane().add(panel, BorderLayout.WEST);
+		
+		JLabel lblNewLabel = new JLabel("Sortie");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblNewLabel.setForeground(Color.GREEN);
+		lblNewLabel.setIcon(null);
+		lblNewLabel.setBackground(Color.GREEN);
+		
+		JLabel label = new JLabel("Obstacle");
+		label.setFont(new Font("Tahoma", Font.BOLD, 14));
+		label.setForeground(Color.BLACK);
+		label.setBackground(Color.GREEN);
+		
+		JLabel lblNewLabel_1 = new JLabel("Sac");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblNewLabel_1.setForeground(Color.ORANGE);
+		
+		JLabel lblRobot = new JLabel("Robot");
+		lblRobot.setForeground(Color.GRAY);
+		lblRobot.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblRobot.setBackground(Color.GREEN);
+		
+		JLabel lblIntrus = new JLabel("Intrus");
+		lblIntrus.setForeground(Color.BLUE);
+		lblIntrus.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblIntrus.setBackground(Color.GREEN);
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap(16, Short.MAX_VALUE)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_panel.createParallelGroup(Alignment.LEADING)
+							.addComponent(lblNewLabel_1)
+							.addComponent(lblNewLabel)
+							.addComponent(label))
+						.addComponent(lblRobot, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblIntrus, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(38)
+					.addComponent(label)
+					.addGap(18)
+					.addComponent(lblNewLabel)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(lblNewLabel_1)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(lblRobot, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(lblIntrus, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(193, Short.MAX_VALUE))
+		);
+		panel.setLayout(gl_panel);
+
+	}
+}

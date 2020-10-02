@@ -1,0 +1,396 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.FlowLayout;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.Point;
+
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Vector;
+import javax.swing.ImageIcon;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.SwingConstants;
+import java.awt.SystemColor;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.BevelBorder;
+import java.awt.Toolkit;
+
+public class ConfigurationView extends Thread {
+
+	private JFrame frmConfiguration;
+	private JTextField nbre_ligne_Field;
+	private  JTextField nbre_colonne_Field;
+	private JTextField nom1;
+	private JTextField nom2;
+	public ConfigurationModel configuration = new ConfigurationModel();
+	private GrilleView grille = new GrilleView(configuration);
+	
+	public static  boolean champIsEmpty(String text)
+	{
+		return text.length() == 0 ;
+	}
+	public static boolean tryParseInt(String value) {  
+	     try {  
+	         Integer.parseInt(value);  
+	         return true;  
+	      } catch (NumberFormatException e) {  
+	         return false;  
+	      }  
+	}
+	
+
+	/**
+	 * Create the application.
+	 */
+	public ConfigurationView() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmConfiguration = new JFrame();
+		frmConfiguration.setVisible(true);
+		frmConfiguration.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\Iserv\\Desktop\\Projet\\Jeu\\src\\SettingsIcon.png"));
+		frmConfiguration.setTitle("Configuration");
+		frmConfiguration.setBounds(500, 250, 734, 618);
+		frmConfiguration.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmConfiguration.getContentPane().setLayout(null);
+		frmConfiguration.setResizable(false);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(191, 205, 219), SystemColor.activeCaption, null, null));
+		panel_2.setBackground(SystemColor.inactiveCaption);
+		panel_2.setBounds(202, 36, 332, 111);
+		frmConfiguration.getContentPane().add(panel_2);
+		panel_2.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Nombre de ligne : ");
+		lblNewLabel.setBounds(10, 11, 199, 37);
+		panel_2.add(lblNewLabel);
+		lblNewLabel.setBackground(SystemColor.info);
+		lblNewLabel.setForeground(SystemColor.menuText);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		
+		JLabel lblNombreDeColonne = new JLabel("Nombre de colonne : ");
+		lblNombreDeColonne.setBounds(10, 63, 199, 37);
+		panel_2.add(lblNombreDeColonne);
+		lblNombreDeColonne.setBackground(SystemColor.inactiveCaption);
+		lblNombreDeColonne.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		
+		nbre_ligne_Field = new JTextField();
+		nbre_ligne_Field.setBounds(209, 11, 96, 37);
+		panel_2.add(nbre_ligne_Field);
+		nbre_ligne_Field.setBackground(Color.WHITE);
+		nbre_ligne_Field.setHorizontalAlignment(SwingConstants.CENTER);
+		nbre_ligne_Field.setText("10");
+		nbre_ligne_Field.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(champIsEmpty(nbre_ligne_Field.getText()) == false )
+				{ int n=0; 
+					if (tryParseInt(nbre_ligne_Field.getText())  ) {
+						n=Integer.parseInt(nbre_ligne_Field.getText());
+					}else JOptionPane.showMessageDialog(null, "Entrer un entier !");
+					if(n != 0)
+					{
+						configuration.nbre_ligne=n;
+						
+					}else JOptionPane.showMessageDialog(null, "le nombre de ligne  ne doit pas etre 0");
+				}else JOptionPane.showMessageDialog(null, "Saisir le nombre de ligne ");
+			}
+		});
+		nbre_ligne_Field.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nbre_ligne_Field.setColumns(3);
+		
+		
+		
+		nbre_colonne_Field = new JTextField();
+		nbre_colonne_Field.setBounds(209, 63, 96, 37);
+		panel_2.add(nbre_colonne_Field);
+		nbre_colonne_Field.setBackground(Color.WHITE);
+		nbre_colonne_Field.setHorizontalAlignment(SwingConstants.CENTER);
+		nbre_colonne_Field.setText("10");
+		nbre_colonne_Field.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(champIsEmpty(nbre_colonne_Field.getText()) == false )
+				{ int n=0; 
+					if (tryParseInt(nbre_colonne_Field.getText())  ) {
+						n=Integer.parseInt(nbre_colonne_Field.getText());
+					}else JOptionPane.showMessageDialog(null, "Entrer un entier !");
+					if(n != 0)
+					{
+						configuration.nbre_colonne=n;
+					}else JOptionPane.showMessageDialog(null, "le nombre de colonne  ne doit pas etre 0 !");
+				}else JOptionPane.showMessageDialog(null, "Saisir le nombre de colonne ! ");
+			}
+		});
+		nbre_colonne_Field.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		nbre_colonne_Field.setColumns(3);
+		
+		JButton btnNewButton = new JButton("Obstacle");
+		btnNewButton.setBackground(SystemColor.inactiveCaption);
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				grille.setVisible(true);
+				grille.EmplacementType("Obstacle");
+				System.out.println(configuration.Emplac_Obstacle.size());
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnNewButton.setBackground(SystemColor.activeCaption);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnNewButton.setBackground(SystemColor.inactiveCaption);
+			}
+		});
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnNewButton.setBounds(83, 181, 127, 50);
+		frmConfiguration.getContentPane().add(btnNewButton);
+		
+		JButton btnChoisirLesEmplacements = new JButton("Sac");
+		btnChoisirLesEmplacements.setBackground(SystemColor.inactiveCaption);
+		btnChoisirLesEmplacements.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				grille.EmplacementType("Sac");
+				grille.setVisible(true);
+				
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnChoisirLesEmplacements.setBackground(SystemColor.activeCaption);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnChoisirLesEmplacements.setBackground(SystemColor.inactiveCaption);
+			}
+		});
+		btnChoisirLesEmplacements.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnChoisirLesEmplacements.setBounds(298, 181, 127, 50);
+		frmConfiguration.getContentPane().add(btnChoisirLesEmplacements);
+		
+		JButton btnChoisirLesEmplacements_1 = new JButton("Sortie");
+		btnChoisirLesEmplacements_1.setBackground(SystemColor.inactiveCaption);
+		btnChoisirLesEmplacements_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				grille.EmplacementType("Sortie");
+				grille.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnChoisirLesEmplacements_1.setBackground(SystemColor.activeCaption);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnChoisirLesEmplacements_1.setBackground(SystemColor.inactiveCaption);
+			}
+		});
+		btnChoisirLesEmplacements_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnChoisirLesEmplacements_1.setBounds(523, 181, 127, 50);
+		frmConfiguration.getContentPane().add(btnChoisirLesEmplacements_1);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.controlHighlight);
+		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel.setBounds(40, 271, 274, 160);
+		frmConfiguration.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		JButton btnNewButton_2 = new JButton("G\u00E9rer les emplacements des robots");
+		btnNewButton_2.setBackground(SystemColor.inactiveCaption);
+		btnNewButton_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				grille.EmplacementType("Robots");
+				grille.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnNewButton_2.setBackground(SystemColor.activeCaption);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnNewButton_2.setBackground(SystemColor.inactiveCaption);
+			}
+		});
+		btnNewButton_2.setBounds(10, 83, 250, 37);
+		panel.add(btnNewButton_2);
+		btnNewButton_2.setFont(new Font("Tahoma", Font.BOLD, 11));
+		
+		JLabel lblNewLabel_4 = new JLabel("Nom du joueur ");
+		lblNewLabel_4.setBounds(84, 22, 146, 18);
+		panel.add(lblNewLabel_4);
+		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		nom1 = new JTextField();
+		nom1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				configuration.Nom_joueur1 = nom1.getText();
+			}
+			
+		});
+		nom1.setBounds(10, 47, 250, 25);
+		panel.add(nom1);
+		nom1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		nom1.setColumns(10);
+		
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Joueur 2 :", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_1.setBounds(421, 271, 274, 160);
+		frmConfiguration.getContentPane().add(panel_1);
+		panel_1.setLayout(null);
+		
+		JButton btnGrerLesEmplacements = new JButton("G\u00E9rer les emplacements des intrus");
+		btnGrerLesEmplacements.setBackground(SystemColor.inactiveCaption);
+		btnGrerLesEmplacements.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				nbre_ligne_Field.setEditable(false);
+				nbre_colonne_Field.setEditable(false);
+				grille.EmplacementType("Intrus");
+				grille.setVisible(true);
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnGrerLesEmplacements.setBackground(SystemColor.activeCaption);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnGrerLesEmplacements.setBackground(SystemColor.inactiveCaption);
+
+			}
+		});
+		btnGrerLesEmplacements.setBounds(16, 81, 246, 37);
+		panel_1.add(btnGrerLesEmplacements);
+		btnGrerLesEmplacements.setFont(new Font("Tahoma", Font.BOLD, 11));
+		
+		JLabel label = new JLabel("Nom du joueur ");
+		label.setBounds(84, 19, 146, 18);
+		panel_1.add(label);
+		label.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		nom2 = new JTextField();
+		nom2.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				configuration.Nom_joueur2=nom2.getText();
+			}
+		});
+		nom2.setBounds(16, 48, 246, 25);
+		panel_1.add(nom2);
+		nom2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		nom2.setColumns(10);
+		
+		JButton btnNewButton_3 = new JButton("Commencer le jeu ");
+		btnNewButton_3.setBackground(SystemColor.inactiveCaption);
+		btnNewButton_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+		
+				if(configuration.Emplac_Intrus.size() !=0  && configuration.Emplac_Robots.size() != 0  &&
+						configuration.Emplac_Sac.size() != 0 && configuration.Emplac_Sortie.size() != 0 &&
+						!configuration.Nom_joueur1.isEmpty() && !configuration.Nom_joueur2.isEmpty())
+				{
+					System.out.println(configuration.nbre_ligne+"\n"+
+							configuration.nbre_colonne+"\n"+
+							configuration.Emplac_Sac +"\n"+
+							configuration.Emplac_Obstacle +"\n"+
+							configuration.Emplac_Sortie +"\n"+
+							configuration.Emplac_Robots+"\n"+
+							configuration.Emplac_Intrus+"\n"+
+							configuration.Nom_joueur1+"\n"+
+							configuration.Nom_joueur2);
+				}
+				JOptionPane.showMessageDialog(null, "Erreur de configuration  !");
+			
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnNewButton_3.setBackground(SystemColor.activeCaption);
+				
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnNewButton_3.setBackground(SystemColor.inactiveCaption);
+			}
+		});
+		btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnNewButton_3.setBounds(287, 481, 199, 31);
+		frmConfiguration.getContentPane().add(btnNewButton_3);
+		
+		JButton btnQuitter = new JButton("Quitter");
+		btnQuitter.setBackground(SystemColor.inactiveCaption);
+		btnQuitter.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				frmConfiguration.dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnQuitter.setBackground(SystemColor.activeCaption);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnQuitter.setBackground(SystemColor.inactiveCaption);
+			}
+		});
+		
+		btnQuitter.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnQuitter.setBounds(287, 523, 199, 31);
+		frmConfiguration.getContentPane().add(btnQuitter);
+		
+		JLabel lblNewLabel_1 = new JLabel("New label");
+		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\Iserv\\Desktop\\Projet\\Jeu\\src\\SettingsBackground.jpg"));
+		lblNewLabel_1.setBounds(0, 0, 728, 589);
+		frmConfiguration.getContentPane().add(lblNewLabel_1);
+		
+		
+		
+		
+		
+	}
+}

@@ -1,0 +1,500 @@
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
+
+public class Jeu extends JFrame{
+	JLabel label;
+	public Jeu(ConfigurationModel configuration) {
+		super("Jeu");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		getContentPane().setLayout(new BorderLayout());
+		 label = new JLabel("Hello");
+		 label.setForeground(Color.red);
+		label.setVisible(true);
+		add(label,BorderLayout.SOUTH);
+		getContentPane().add(new Map(configuration),BorderLayout.CENTER);
+		pack();
+		setLocationRelativeTo(null);
+		setResizable(false);
+		setVisible(true);
+		
+	}
+	private class Map extends JPanel implements KeyListener,MouseListener {
+		int width,height,cellWidth,cellHeight;
+		private ConfigurationModel configuration ;
+		private Vector<Robot> robots = new Vector<Robot>();
+		private Vector<Intru> intrus = new Vector<Intru>();
+		private Vector<Sac> sacs = new Vector<Sac>();
+		private Vector<Obstacle> obstacles = new Vector<Obstacle>();
+		private Vector<Sortie> sorties = new Vector<Sortie>();
+		private int joueurActif ;
+		private boolean jeuArrete;
+		
+		public Map(ConfigurationModel configuration) {
+			this.configuration = configuration ; 
+			joueurActif = 1;
+			jeuArrete = true;
+			width=getWidth();
+			height=getHeight();
+			cellWidth =40;
+			cellHeight =40;
+			prepare();
+			changerTour();
+			this.addKeyListener(this);
+			this.addMouseListener(this);
+	        this.setFocusable(true);
+	        this.requestFocusInWindow();
+	        
+	        
+	         
+		}
+		// Changer automatiquement le tour chaque 5 secondes
+		private void changerTour()
+		{
+			
+			Timer timer = new Timer();
+			TimerTask  timerTask = new TimerTask() {
+				int secondPassed = 0 ;
+				@Override
+				public void run() {
+					secondPassed ++ ; 
+					if (!jeuArrete) {
+						//System.out.println("Il reste "+(5-secondPassed)+" secondes pourque le joueur " + joueurActif + " joue son coup !");
+						label.setText("Il reste "+(5-secondPassed)+" secondes pourque le joueur " + joueurActif + " joue son coup !  .. Cliquer pour prendre le coup ! ..");
+						if (secondPassed == 5 && joueurActif == 1) {
+							secondPassed =0;
+							joueurActif =2;
+						}
+						if (secondPassed == 5 && joueurActif == 2) {
+							secondPassed =0;
+							joueurActif =1;
+						}
+					}
+					if (jeuArrete) {
+						secondPassed = 0 ;
+						label.setText("Joueur "+joueurActif+" en train de jouer !  .. Choisir une direction .. ");
+					}
+					
+				}
+			};
+			timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+		}
+		// Construire les objects obstacle / sac / sortie / robot / intru à partir de la configuration
+		private void prepare()
+		
+		{
+			for (int i = 0; i < configuration.Emplac_Intrus.size(); i++) {
+				int x= configuration.Emplac_Intrus.get(i).x;
+				int y= configuration.Emplac_Intrus.get(i).y;
+				Intru intru = new Intru(y, x, 1000);
+				intrus.add(intru);
+				MoveIntrus moveIntrus =new MoveIntrus(intru);
+				moveIntrus.start();
+			}
+			for (int i = 0; i < configuration.Emplac_Robots.size(); i++) {
+				int x= configuration.Emplac_Robots.get(i).x;
+				int y= configuration.Emplac_Robots.get(i).y;
+				Robot robot = new Robot(y,x, 500);
+				robots.add(robot);
+				MoveRobots moveRobots = new MoveRobots(robot);
+				moveRobots.start();
+			}
+			for (int i = 0; i < configuration.Emplac_Obstacle.size(); i++) {
+				int x= configuration.Emplac_Obstacle.get(i).x;
+				int y= configuration.Emplac_Obstacle.get(i).y;
+				Obstacle obstacle = new Obstacle(y, x);
+				obstacles.add(obstacle);
+			}
+			for (int i = 0; i < configuration.Emplac_Sac.size(); i++) {
+				int x= configuration.Emplac_Sac.get(i).x;
+				int y= configuration.Emplac_Sac.get(i).y;
+				Sac sac = new Sac(y, x);
+				sacs.add(sac);
+			}
+			for (int i = 0; i < configuration.Emplac_Sortie.size(); i++) {
+				int x= configuration.Emplac_Sortie.get(i).x;
+				int y= configuration.Emplac_Sortie.get(i).y;
+				Sortie sortie = new Sortie(y, x);
+				sorties.add(sortie);
+			}
+		}
+		// verifier si p1 est adjacent à p2
+		private boolean EstAdjacent(Point p1,Point p2)
+		{
+			if(((p1.y+1 == p2.y || p1.y-1 == p2.y) && (p1.x+1 == p2.x || p1.x-1 == p2.x ||p1.x == p2.x))||
+			((p1.x+1 == p2.x || p1.x-1 == p2.x) && (p1.y+1 == p2.y || p1.y-1 == p2.y ||p1.y == p2.y)))
+			return true;
+			else return false;
+		}
+		private boolean MovementValide(Point p , char direction) {
+			Point pa = null;
+			switch (direction) {
+			case 'D': pa = new Point(p.x+1,p.y);break;
+			case 'G': pa = new Point(p.x-1,p.y);break;
+			case 'B': pa = new Point(p.x,p.y+1);break;
+			case 'H': pa = new Point(p.x,p.y-1);break;
+			default:
+				break;
+			}
+			if (pa != null) {
+				for (int i = 0; i < obstacles.size(); i++) {
+					if (obstacles.get(i).x == pa.x && obstacles.get(i).y== pa.y ) {
+						return false;
+					}
+				}
+				for (int i = 0; i < sacs.size(); i++) {
+					if (sacs.get(i).x == pa.x && sacs.get(i).y== pa.y ) {
+						return false;
+					}
+				}
+				for (int i = 0; i < intrus.size(); i++) {
+					if (intrus.get(i).x == pa.x && intrus.get(i).y== pa.y ) {
+						return false;
+					}
+				}
+				for (int i = 0; i < robots.size(); i++) {
+					if (robots.get(i).x == pa.x && robots.get(i).y== pa.y ) {
+						return false;
+					}
+				}
+				for (int i = 0; i < sorties.size(); i++) {
+					if (sorties.get(i).x == pa.x && sorties.get(i).y== pa.y ) {
+						return false;
+					}
+				}
+			}
+			
+			return true;
+		}
+
+		
+		public class MoveIntrus extends Thread 
+		{
+			Intru intru ;
+			MoveIntrus(Intru intru)
+			{
+				this.intru=intru;
+			}
+			@Override
+			public void run() {
+			//	int pas =0;
+				while(true)
+				{	//  un intru prend un sac 
+					if (jeuArrete) {
+						try {
+							sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					else 
+					{
+						// un intru prend un sac
+						for (int i = 0; i < sacs.size(); i++) {
+							if (EstAdjacent(intru, sacs.get(i))) {
+								if (intru.PrendSac(sacs.get(i))) {
+									sacs.remove(sacs.get(i));
+								}
+																}
+						} 
+						//un robot attrape un intru 
+						for (int i = 0; i < robots.size(); i++) {
+							
+							if (EstAdjacent(intru, robots.get(i)) )
+								{
+									for (int j = 0; j < intru.sacs.size(); j++) {
+										sacs.add(intru.sacs.get(j));
+									}
+									intrus.remove(intru);
+								}
+						}
+						// un intru sort à partir d'une sortie 
+						for (int i = 0; i < sorties.size(); i++) {
+							
+							if (EstAdjacent(intru, sorties.get(i)) )
+								{
+									intrus.remove(intru);
+								}
+						}
+						
+						// le mouvement d'un intru d'une case à une autre
+						if (intru.active==false) interrupt();
+						
+							
+							if (MovementValide(intru, intru.direction))
+							{
+								intru.move();
+								repaint();
+								try {
+									sleep(1000);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
+							}
+							
+					}
+				
+						
+				}
+							
+				}
+							
+			}
+		class MoveRobots extends Thread 
+		{
+			Robot robot;
+			public MoveRobots(Robot robot) {
+				this.robot = robot ;
+			}
+
+			@Override
+			public void run() {
+				// pas = 0;
+				while(true)
+				{
+					if (jeuArrete) {
+						try {
+							sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					else {
+						//un robot attrape un intru 
+						for (int i = 0; i < intrus.size(); i++) {
+							
+							if (EstAdjacent(robot, intrus.get(i)) )
+								{
+										intrus.remove(intrus.get(i));
+									
+								}
+						}
+						
+						// le mouvement d'un robot d'une case à une autre
+						if (MovementValide(robot, robot.direction))
+						{
+							robot.move();
+							repaint();
+							
+							try {
+								sleep(200);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						}
+						
+					}
+					
+				}
+							
+				}
+					
+			}
+		
+		// dimensionner la JPanel
+		@Override
+		public Dimension getPreferredSize() {
+			return new Dimension(configuration.nbre_colonne*cellWidth, configuration.nbre_ligne*cellHeight);
+			}
+		// dessiner tous les objects 
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			
+			if (intrus.size() == 0 )
+			{
+				jeuArrete = true;
+				label.setText("le jeu est terminé !");
+				ImageIcon imageIcon=new ImageIcon("resources\\GameOver.jpg");
+				Image image = imageIcon.getImage();
+				g.drawImage(image, 0, 0, getHeight(), getHeight(), null);
+				for (Thread t : Thread.getAllStackTraces().keySet()) 
+				{  if (t.getState()==Thread.State.RUNNABLE) 
+				     t.interrupt(); 
+				} 
+				repaint();
+			}
+			else {
+				for (int i = 0; i < configuration.nbre_colonne; i++) {
+					for (int j = 0; j < configuration.nbre_ligne; j++) {
+						g.setColor(Color.WHITE);
+						g.fillRect(i*cellWidth, j*cellHeight, cellWidth, cellHeight);
+					}
+					
+				}
+				for (int i = 0; i < intrus.size(); i++) {
+					if(intrus.get(i).active=true)
+					{
+						intrus.get(i).draw(g);
+					}
+				}
+				for (int i = 0; i < robots.size(); i++) {
+					if (i == n ) {
+						
+						g.setColor(Color.red);
+						g.drawRect(robots.get(i).x*cellWidth,robots.get(i).y*cellHeight, cellWidth, cellHeight);
+					}
+					robots.get(i).draw(g);
+				}
+				for (int i = 0; i < obstacles.size(); i++) {
+					
+					obstacles.get(i).draw(g);
+				}
+				for (int i = 0; i < sacs.size(); i++) {
+					
+					sacs.get(i).draw(g);
+				}
+				for (int i = 0; i < sorties.size(); i++) {
+					
+					sorties.get(i).draw(g);
+				}
+			}
+		}
+		
+		
+		
+		int n = -1 ;
+		@Override
+		public void keyTyped(KeyEvent e) {
+			
+			
+			if (joueurActif == 1 && jeuArrete ) {
+				if (robots.size() == 1) {
+					n = 0;
+				}
+				if (n != -1) {
+					
+					Robot robot =  robots.get(n);
+					switch (e.getKeyChar()) {
+					case 'd': robot.TournerD();break;
+					case 'q':robot.TournerG();break;
+					case 'z':robot.TournerH();break;
+					case 's':robot.TournerB();break;
+					default:
+						throw new IllegalArgumentException("Unexpected value: " + e.getKeyChar());
+					}
+					joueurActif = 2 ;
+					jeuArrete = false;
+				}else JOptionPane.showMessageDialog(null, "Cliquez sur un robot !");
+				
+				
+			}
+			
+				
+				else if (joueurActif == 2 && jeuArrete ) {
+					if (intrus.size() == 1 ) {
+						n=0;
+					}
+					if (n != -1) {
+						Intru intru =  intrus.get(n);
+						switch (e.getKeyChar()) {
+						case 'd': intru.TournerD();break;
+						case 'q':intru.TournerG();break;
+						case 'z':intru.TournerH();break;
+						case 's':intru.TournerB();break;
+						}
+						joueurActif = 1 ;
+						jeuArrete=false;
+					}else JOptionPane.showMessageDialog(null, "Cliquez sur un intru !");
+					
+			}	
+			
+		}
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			jeuArrete = true;
+			n=-1;
+			if (jeuArrete && intrus.size() != 1 && robots.size() != 1) {
+				int colonne = e.getX()/cellWidth ;
+				int ligne = e.getY() / cellWidth ;
+				Point point = new Point(ligne,colonne);
+				System.out.println(point);
+				if (joueurActif == 1  ) {
+					for (int i = 0; i < robots.size(); i++) {
+						if (robots.get(i).x == point.y && robots.get(i).y == point.x) {
+							n=i;
+							System.out.println("ok");
+						}
+					}
+					if (n == -1 ) {
+						JOptionPane.showMessageDialog(null, "Choisir  un robot ! ");
+					}
+					
+				}
+				if (joueurActif == 2  ) {
+					for (int i = 0; i < intrus.size(); i++) {
+						if (intrus.get(i).x == point.y && intrus.get(i).y == point.x) {
+							n=i;
+							System.out.println("ok");
+						}
+					}
+					if (n == -1 ) {
+						JOptionPane.showMessageDialog(null, "Choisir un intru ! ");
+					}
+				}
+				
+			}
+			
+			
+		}
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+}
+
+

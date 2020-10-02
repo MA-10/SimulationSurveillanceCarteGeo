@@ -1,0 +1,22 @@
+
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
+public class Sortie extends Point {
+	ImageIcon imageIcon = new ImageIcon("resources\\exit.png");
+	Image image ;
+	Sortie(int x , int y)
+	{
+		super(x,y);
+		image = imageIcon.getImage();
+	}
+	public void draw(Graphics g) { 
+		g.drawImage(image,x*50, y*50, 50, 50, null);
+		return;	
+}
+
+}

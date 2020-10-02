@@ -1,0 +1,79 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JMenuBar;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import java.awt.SystemColor;
+
+public class ScoreView extends JFrame {
+	private JTable table;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ScoreView frame = new ScoreView();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public ScoreView() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 350);
+		
+		table = new JTable();
+		table.setFont(new Font("Tahoma", Font.BOLD, 15));
+		table.setBackground(SystemColor.inactiveCaption);
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{1, null, null, null},
+				{2, null, null, null},
+				{3, null, null, null},
+				{4, null, null, null},
+				{5, null, null, null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column"
+			}
+		));
+		table.setPreferredScrollableViewportSize(new Dimension (500,80));
+		table.setSize(500, 500);
+		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(table, GroupLayout.PREFERRED_SIZE, 392, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(32, Short.MAX_VALUE))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap(84, Short.MAX_VALUE)
+					.addComponent(table, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+					.addGap(50))
+		);
+		getContentPane().setLayout(groupLayout);
+	}
+}

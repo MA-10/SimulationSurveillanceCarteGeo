@@ -1,0 +1,63 @@
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+import javax.swing.*;
+import javax.swing.table.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+public final class ScoreView extends JPanel {
+   private final String[] columnNames = {"Rang", "Score", "Nom","Role"};
+   private final Object[][] data=new Object [4][2];
+   
+       
+ 
+   
+   private final TableModel model = new DefaultTableModel(data, columnNames) {
+      @Override
+      public Class getColumnClass(int column) {
+         return getValueAt(0, column).getClass();
+      }
+   };
+   private final JTable table = new JTable(model);
+   private final JScrollPane scrollPane = new JScrollPane(table);
+   public ScoreView() {
+      
+      JLabel lblNewLabel = new JLabel("HIGH SCORE");
+      lblNewLabel.setForeground(new Color(100, 100, 100));
+      lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
+     
+      GroupLayout groupLayout = new GroupLayout(this);
+      groupLayout.setHorizontalGroup(
+      	groupLayout.createParallelGroup(Alignment.LEADING)
+      		.addGroup(groupLayout.createSequentialGroup()
+      			.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+      				.addGroup(groupLayout.createSequentialGroup()
+      					.addGap(21)
+      					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 450, GroupLayout.PREFERRED_SIZE))
+      				.addGroup(groupLayout.createSequentialGroup()
+      					.addGap(212)
+      					.addComponent(lblNewLabel)))
+      			.addContainerGap(23, Short.MAX_VALUE))
+      );
+      groupLayout.setVerticalGroup(
+      	groupLayout.createParallelGroup(Alignment.LEADING)
+      		.addGroup(groupLayout.createSequentialGroup()
+      			.addGap(33)
+      			.addComponent(lblNewLabel)
+      			.addGap(36)
+      			.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 174, GroupLayout.PREFERRED_SIZE)
+      			.addContainerGap(69, Short.MAX_VALUE))
+      );
+      setLayout(groupLayout);
+   }
+   public static void main(String[] args) {
+      JFrame frame = new JFrame("JTableHeaderHide Test");
+      frame.setSize(375, 250);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.getContentPane().add(new ScoreView());
+      frame.setLocationRelativeTo(null);
+      frame.setVisible(true);
+   }
+}

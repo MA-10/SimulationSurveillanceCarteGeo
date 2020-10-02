@@ -1,0 +1,70 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JFormattedTextField;
+import java.awt.BorderLayout;
+import java.awt.Button;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.Color;
+import java.awt.SystemColor;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class Fenetre {
+
+	private JFrame frame;
+	/**
+	 * @wbp.nonvisual location=211,84
+	 */
+	private final Button button = new Button("New Game");
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Fenetre window = new Fenetre();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public Fenetre() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		button.setBackground(Color.GRAY);
+		button.setFont(new Font("Goudy Stout", Font.PLAIN, 12));
+		frame = new JFrame();
+		frame.getContentPane().setFont(new Font("Unispace", Font.PLAIN, 10));
+		frame.getContentPane().setBackground(SystemColor.info);
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 436, Short.MAX_VALUE)
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 263, Short.MAX_VALUE)
+		);
+		frame.getContentPane().setLayout(groupLayout);
+	}
+
+}

@@ -1,0 +1,53 @@
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+public final class ScoreView extends JPanel {
+   private final String[] columnNames = {"String", "Integer", "Boolean"};
+   private final Object[][] data = {{"Tutorials Point", 100, true}, {"Tutorix", 200, false},          {"Tutorials Point", 300, true}, {"Tutorix", 400, false}};
+   private final TableModel model = new DefaultTableModel(data, columnNames) {
+      @Override
+      public Class getColumnClass(int column) {
+         return getValueAt(0, column).getClass();
+      }
+   };
+   private final JTable table = new JTable(model);
+   private final JScrollPane scrollPane = new JScrollPane(table);
+   public ScoreView() {
+      JCheckBox check = new JCheckBox("JTableHeader visible: ", true);
+      check.addActionListener(ae -> {
+         JCheckBox cb = (JCheckBox) ae.getSource();
+         scrollPane.getColumnHeader().setVisible(cb.isSelected());
+         scrollPane.revalidate();
+      });
+      GroupLayout groupLayout = new GroupLayout(this);
+      groupLayout.setHorizontalGroup(
+      	groupLayout.createParallelGroup(Alignment.LEADING)
+      		.addGroup(groupLayout.createSequentialGroup()
+      			.addContainerGap()
+      			.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+      				.addComponent(check, GroupLayout.PREFERRED_SIZE, 450, GroupLayout.PREFERRED_SIZE)
+      				.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 450, GroupLayout.PREFERRED_SIZE))
+      			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+      );
+      groupLayout.setVerticalGroup(
+      	groupLayout.createParallelGroup(Alignment.LEADING)
+      		.addGroup(groupLayout.createSequentialGroup()
+      			.addGap(83)
+      			.addComponent(check)
+      			.addPreferredGap(ComponentPlacement.UNRELATED)
+      			.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+      			.addContainerGap())
+      );
+      setLayout(groupLayout);
+   }
+   public static void main(String[] args) {
+      JFrame frame = new JFrame("JTableHeaderHide Test");
+      frame.setSize(375, 250);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.getContentPane().add(new ScoreView());
+      frame.setLocationRelativeTo(null);
+      frame.setVisible(true);
+   }
+}

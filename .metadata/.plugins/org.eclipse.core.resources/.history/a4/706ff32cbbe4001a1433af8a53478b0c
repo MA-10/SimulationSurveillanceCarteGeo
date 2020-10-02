@@ -1,0 +1,33 @@
+import java.awt.Point;
+import java.util.*;
+public class ConfigurationModel {
+	public int  nbre_ligne;
+	public int nbre_colonne;
+	public Vector <Point> Emplac_Sac ;
+	public Vector <Point> Emplac_Obstacle ;
+	public Vector <Point> Emplac_Sortie ;
+	public int nbre_robot ;
+	public int nbre_intrus;
+	public Vector <Point> Emplac_Robots ;
+	public Vector <Point> Emplac_Intrus ;
+	
+	ConfigurationModel (int l , int c)
+	{
+		this.nbre_ligne =l;
+		this.nbre_colonne=c;
+		Emplac_Sac= new Vector <Point>();
+		Emplac_Obstacle= new Vector <Point>();
+		Emplac_Sortie= new Vector <Point>();
+		nbre_robot=0;
+		nbre_intrus=0;
+		Emplac_Robots= new Vector <Point>();
+		Emplac_Intrus= new Vector <Point>();
+		
+	}
+	
+	
+	
+	
+	
+
+}

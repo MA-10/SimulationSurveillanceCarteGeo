@@ -1,0 +1,71 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import java.awt.GridBagLayout;
+import javax.swing.JPanel;
+import java.awt.GridBagConstraints;
+import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class GrilleView {
+
+	private JFrame frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GrilleView window = new GrilleView();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public GrilleView() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 660, 545);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new GridLayout(1, 0, 0, 0));
+		
+		JPanel panel = new JPanel();
+		frame.getContentPane().add(panel);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
+		panel.add(panel_2);
+		
+		JPanel panel_1 = new JPanel();
+		panel.add(panel_1);
+		
+		JPanel panel_3 = new JPanel();
+		panel.add(panel_3);
+		
+		JPanel panel_4 = new JPanel();
+		panel.add(panel_4);
+		
+		JPanel panel_5 = new JPanel();
+		panel.add(panel_5);
+	}
+
+}
